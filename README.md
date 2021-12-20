@@ -27,16 +27,15 @@ To log into the Umbraco Back office, you will need to use the following URL and 
     http://localhost:5080/umbraco
 
 
-
-
-## To Clean up your images
+## To Clean up your images and re-build changes
 
 Run the following. 
 
-**NOTE - This will remove all unused images. If you have images from other applications you want to keep, don't run this.**
+**NOTE - This will remove all unused images and volumes. If you have images from other applications you want to keep, don't run this.**
 
     docker compose down
-    docker image prune -a -f
+    docker compose rm -f
+    docker image prune -f 
     docker volume prune -f 
 
 
