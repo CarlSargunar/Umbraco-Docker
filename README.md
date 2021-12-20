@@ -1,13 +1,10 @@
 # Notes
 
-24 Days URL : https://stage-24days.euwest01.umbraco.io/umbraco#/umbraco
+Docker Sample for Sql Server + Umbraco on Docker. Prerequisites to run this sample:
 
-Docker Sample for Sql Server + Umbraco in Docker on a Pi. Prerequisites to run this sample:
-
-- Docker Desktop for Windows
+- Docker Desktop (on Windows or Mac)
     - WSL for windows (to run Linux containers)
 - Visual Studio Code is helpful
-
 
 To start the sample run the folling command. 
 
