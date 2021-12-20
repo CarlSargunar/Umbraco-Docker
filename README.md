@@ -27,6 +27,8 @@ To log into the Umbraco Back office, you will need to use the following URL and 
     http://localhost:5080/umbraco
 
 
+
+
 ## To Clean up your images
 
 Run the following. 
@@ -66,9 +68,8 @@ Edit the csproj file to change following element:
         <RuntimeHostConfigurationOption Include="System.Globalization.AppLocalIcu" Value="68.2" />
     </ItemGroup>
 
-### Run the website in isolation
+Without this step, the project won't compile on Linux, but will compile in windows.
 
-    dotnet run --project UmbDock
 
 ### Also Create the Email Api
 
@@ -82,6 +83,12 @@ Edit the csproj file to change following element:
 To run a database in a standalone container, you can use the following command:
 
     docker run -d --name sql_server -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=SQL_password123' -v mssqlsystem:/var/opt/mssql -v mssqluser:/var/opt/sqlserver -p 1433:1433 mcr.microsoft.com/mssql/server:2017-latest
+
+
+To run the website in isolation, from the root of the project you can run:
+
+    dotnet run --project UmbDock
+
 # Reference
 
 
