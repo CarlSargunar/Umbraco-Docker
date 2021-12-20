@@ -9,6 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["WeatherApi/WeatherApi.csproj", "WeatherApi/"]
 RUN dotnet restore "WeatherApi/WeatherApi.csproj"
+COPY . .
 WORKDIR "/src/WeatherApi"
 RUN dotnet build "WeatherApi.csproj" -c Release -o /app/build
 
