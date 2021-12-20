@@ -1,0 +1,54 @@
+version: '3.4'
+
+services:
+  db-container:
+    build:
+      context: .
+      dockerfile: data/Dockerfile
+    ports:
+     - "1433:1433"
+     - "1434:1434"
+    volumes:
+     - database:/var/opt/mssql
+    networks:
+      - umbnet
+
+  app-container:
+    build:
+      context: .
+      dockerfile: UmbDock/Dockerfile
+    volumes:
+      - media:/app/wwwroot/media
+      - logs:/app/umbraco/Logs
+    restart: always
+    environment:
+     - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "5080:80"
+    depends_on:
+      - db-container
+    networks:
+      - umbnet
+
+  api-container:
+    build:
+      context: .
+      dockerfile: WeatherApi/Dockerfile
+    restart: always
+    environment:
+     - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "5081:80"
+    depends_on:
+      - db-container
+    networks:
+      - umbnet      
+
+volumes:
+  media:
+  logs:
+  database:
+
+networks:
+  umbnet:
+    driver: bridge
