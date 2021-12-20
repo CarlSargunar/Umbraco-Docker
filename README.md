@@ -27,6 +27,11 @@ To log into the Umbraco Back office, you will need to use the following URL and 
     http://localhost:5080/umbraco
 
 
+# TODO Still
+
+- Make the Dockerfile for the Weather API simpler - the current default one is hard to read
+
+
 ## To Clean up your images and re-build changes
 
 Run the following. 
