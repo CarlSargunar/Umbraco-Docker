@@ -17,7 +17,7 @@ You will then be able to browse the site by opening the following URL
 
     http://localhost:5080/
 
-*Note : This sample does not set up the HTTPS certificate. That's intentionan, becuase it's much harder, and not necessary for this proof of concept.*
+*Note : This sample does not set up the HTTPS certificate. That's intentional, becuase it's much harder, and not necessary for this proof of concept.*
 
 To log into the Umbraco Back office, you will need to use the following URL and  credentials:
 
