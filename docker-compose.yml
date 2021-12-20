@@ -1,10 +1,13 @@
 version: '3.4'
 
 services:
+
+  # This is the database container. The exposed volume means that the SQL DATA and LOG files
+  # are stored off the container, in case the container is restarted.
   db-container:
     build:
       context: ./data
-      dockerfile: data/Dockerfile
+      dockerfile: Dockerfile
     ports:
      - "1433:1433"
      - "1434:1434"
@@ -13,6 +16,9 @@ services:
     networks:
       - umbnet
 
+  # This is the web container. It exposes the port 80, and stored media and Umbraco logs on
+  # a volume so they are accessable outside the container.
+  # It 
   app-container:
     build:
       context: ./UmbDock
@@ -23,6 +29,8 @@ services:
     restart: always
     environment:
      - ASPNETCORE_ENVIRONMENT=Production
+    # This is the external port the website will be visible from : http://localhost:5080/
+    # The Umbraco URL is : http://localhost:5080/umbraco
     ports:
       - "5080:80"
     depends_on:
@@ -30,6 +38,7 @@ services:
     networks:
       - umbnet
 
+  # This is the API container, it will host the weather service at the URL /weatherforecast
   api-container:
     build:
       context: .
@@ -37,10 +46,9 @@ services:
     restart: always
     environment:
      - ASPNETCORE_ENVIRONMENT=Production
+    # This port is for EXTERNAL testing, and is not needed when communicating internally within the Application network
     ports:
       - "5081:80"
-    depends_on:
-      - db-container
     networks:
       - umbnet      
 
@@ -49,6 +57,7 @@ volumes:
   logs:
   database:
 
+# This is the network that the containers will be on, and will ONLY contain the containers from the application
 networks:
   umbnet:
     driver: bridge

@@ -20,30 +20,37 @@ namespace UmbDock
 
         public override IActionResult Index()
         {
-            var apiResp = new List<WeatherForecast>();
+
+            var apiResp = GetWeatherForecasts("http://api-container:80/weatherforecast");
+            TempData["ApiResponse"] = apiResp;
+
+            return CurrentTemplate(CurrentPage);
+        }
+
+        private List<WeatherForecast> GetWeatherForecasts(string url)
+        {
+            var resp = new List<WeatherForecast>();
+
+            logger.LogInformation("About to call API :" + url);
 
             try
             {
                 // Doing this verbose so people can debug it if they want            
                 // Todo : Make this a configuration option
-                var apiUrl = "http://api-container:5081/weatherforecast";
                 var client = new System.Net.Http.HttpClient();
-                var response = client.GetAsync(apiUrl).Result;
+                var response = client.GetAsync(url).Result;
                 var result = response.Content.ReadAsStringAsync().Result;
 
+                logger.LogInformation("API Response :" + result);
+
                 var weatherForecast = Newtonsoft.Json.JsonConvert.DeserializeObject<WeatherForecast[]>(result);
-                apiResp.AddRange(weatherForecast);
+                resp.AddRange(weatherForecast);
             }
             catch (Exception e)
             {
                 logger.LogError("Exception : {0}", e.Message);
             }
-            TempData["ApiResponse"] = apiResp;
-
-            return CurrentTemplate(CurrentPage);
+            return resp;
         }
     }
-
-
-
 }
