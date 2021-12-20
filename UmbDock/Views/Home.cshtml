@@ -1,0 +1,44 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.Home>
+
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels
+@using UmbDock.Models
+
+@{
+    Layout = "Master.cshtml";
+
+    var apiResponse = (List<WeatherForecast>)TempData["ApiResponse"];
+}
+
+<main class="page lanidng-page">
+    @await Html.PartialAsync("avatarHeader", Model)
+    @await Html.PartialAsync("latestProjects", Model.Children<ContentModels.ProjectList>().FirstOrDefault())
+    @Html.GetBlockListHtml(Model.MainContent)
+</main>
+
+
+@if (apiResponse != null && apiResponse.Count > 0)
+{
+    <div class="container">
+        <div class="row">
+            <h3>Weather API Response</h3>
+            <br/>
+            <p>
+                The weather sent back the following
+                <ul>
+                    @foreach (var wf in apiResponse)
+                    {
+                        <li>@wf.Date - @wf.Summary</li>
+                    }
+                </ul>
+            </p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            <h3>No response from API</h3>
+        </div>
+    </div>
+}

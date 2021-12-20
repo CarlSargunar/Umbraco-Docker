@@ -1,0 +1,7 @@
+# Use the SDK image to build and publish the website
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+COPY ["UmbDock.csproj", "."]
+RUN dotnet restore "UmbDock.csproj"
+COPY . .
+RUN dotnet publish "UmbDock.csproj" -c Development -o /app/publish
