@@ -57,7 +57,7 @@ If you want to re-create this from scratch, you can do the following. You'll nee
     dotnet new umbraco -n UmbDock --friendly-name "Admin User" --email "admin@admin.com" --password "Pa55word!!" --connection-string "Server=db-container;Database=umbraco;User Id=sa;Password=SQL_password123;"
     dotnet sln add UmbDock
     dotnet add UmbDock package Portfolio
-    dotnet add package Newtonsoft.Json
+    dotnet add UmbDock package Newtonsoft.Json
 
 ### Modify csProj
 
