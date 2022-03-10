@@ -8,7 +8,7 @@ Docker Sample for Sql Server + Umbraco on Docker. Prerequisites to run this samp
     - There's also a plugin for VS Code Docker which is useful
 
 
-Slides : [Slides](https://docs.google.com/presentation/d/1RhfTbOapkVlpEyAjJs80bQEh4oOKxCMD7Y8lyB3sL7E/edit?usp=sharing)
+Slides : [https://docs.google.com/presentation/d/1RhfTbOapkVlpEyAjJs80bQEh4oOKxCMD7Y8lyB3sL7E/](https://docs.google.com/presentation/d/1RhfTbOapkVlpEyAjJs80bQEh4oOKxCMD7Y8lyB3sL7E/)
 
 ## Setup Process
 
