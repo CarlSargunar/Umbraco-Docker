@@ -97,6 +97,25 @@ To run several more
     docker run --name umbdock02 -p 8002:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Production' -d umbdock
 
 
+# Docker Compose
+
+To start the sample run the folling command. 
+
+    docker compose up -d
+
+## To Clean up your images and re-build changes
+
+Run the following. 
+
+**NOTE - This will remove all unused images and volumes. If you have images from other applications you want to keep, don't run this.**
+
+    docker compose down
+    docker compose rm -f
+    docker image prune -f 
+    docker volume prune -f 
+
+
+
 # Reference
 
 ## Docker-compose 
