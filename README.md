@@ -7,6 +7,9 @@ Docker Sample for Sql Server + Umbraco on Docker. Prerequisites to run this samp
 - Visual Studio Code is helpful
     - There's also a plugin for VS Code Docker which is useful
 
+
+Slides : [https://docs.google.com/presentation/d/1RhfTbOapkVlpEyAjJs80bQEh4oOKxCMD7Y8lyB3sL7E/](https://docs.google.com/presentation/d/1RhfTbOapkVlpEyAjJs80bQEh4oOKxCMD7Y8lyB3sL7E/)
+
 ## Setup Process
 
 If you want to re-create this from scratch, you can do the following. You'll need to add the customised controllers and projects etc to call the API, but the following instructions were used to create the project and references
