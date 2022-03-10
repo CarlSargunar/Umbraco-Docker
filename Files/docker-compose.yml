@@ -54,7 +54,7 @@ services:
     # This is the external port the website will be visible from : http://localhost:5080/
     # The Umbraco URL is : http://localhost:5080/umbraco
     ports:
-      - "5080:80"
+      - "5081:80"
     depends_on:
       - umb-data
     networks:
@@ -76,7 +76,7 @@ services:
     # This is the external port the website will be visible from : http://localhost:5080/
     # The Umbraco URL is : http://localhost:5080/umbraco
     ports:
-      - "5080:80"
+      - "5082:80"
     depends_on:
       - umb-data
     networks:

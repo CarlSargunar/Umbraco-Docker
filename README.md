@@ -28,10 +28,11 @@ If you want to re-create this from scratch, you can do the following. You'll nee
 
 # Now Run the site
 
-This will also create the database
+This will also create the database as a LocalDB
 
     dotnet run --project UmbDock
 
+# Turning the site into a Docker App
 
 ## Modify csProj
 
@@ -47,7 +48,9 @@ Without this step, the project won't compile on Linux, but will compile in windo
 
 # Setup the Database Container
 
-The data is in a local DB file for now - so let's MOVE the MDF files into a Docker database container and run them from in there.
+Copy the UmbData folder from Files into the Root. This has the data container set-up in it
+
+The database is in a local DB file for now - so let's MOVE the MDF files into a Docker database container and run them from in there.
 
 These files are Umbraco.mdf and Umbraco_log.ldf in the folder UmbDock\umbraco\Data
 
@@ -66,6 +69,10 @@ Run the database container. We're using a non-standard port in case you have a l
 
     docker run --name umbdata -p 1400:1433 --volume sqlserver:/var/opt/sqlserver -d umbdata
 
+At this point you can run the local site again, but it will talk to the Database container rather than the local DB
+
+    dotnet run --project UmbDock
+
 # Application Container
 
 We would like to run this website in a container too - let's test that container.
@@ -74,11 +81,11 @@ First create the Docker file by copying it from /Files/Umbdata/UmbDock/Dockerfil
 
 ## Network
 
-Because we're using a "Bridge Network" we need to communicate from the application containers to the db container on IP address. So let's find that, and inspect the Bridge network.
+Because we're using the default "Bridge Network" we need to communicate from the application containers to the db container on IP address. So let's find that, and inspect the Bridge network.
 
     docker network inspect bridge
 
-Put this into a Production Connectionstring with a transform, but you won't need the non-standard port. Here my example is 172.17.0.2
+Put this into a Staging Connectionstring with a transform, but you won't need the non-standard port. Here my example is 172.17.0.2
 
     "umbracoDbDSN": "Server=172.17.0.2;Database=UmbracoDb;User Id=sa;Password=SQL_password123;"
 
@@ -89,15 +96,17 @@ We've got our site, now we need to build an image which can be used to host the 
 
 To run a single local instance
 
-    docker run --name umbdock00 -p 8000:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Production' -d umbdock
+    docker run --name umbdock00 -p 8000:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' -d umbdock
 
 To run several more
 
-    docker run --name umbdock01 -p 8001:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Production' -d umbdock
-    docker run --name umbdock02 -p 8002:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Production' -d umbdock
+    docker run --name umbdock01 -p 8001:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' -d umbdock
+    docker run --name umbdock02 -p 8002:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' -d umbdock
 
 
 # Docker Compose
+
+Docker Compose lets you define multiple containers as part of an application - copy the docker-compose.yml file from the Files folder to the root.
 
 To start the sample run the folling command. 
 
@@ -111,7 +120,7 @@ Run the following.
 
     docker compose down
     docker compose rm -f
-    docker image prune -f 
+    docker image prune -a -f 
     docker volume prune -f 
 
 
