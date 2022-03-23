@@ -18,13 +18,17 @@ If you want to re-create this from scratch, you can do the following. You'll nee
     dotnet new -i Umbraco.Templates
 
 ### Create solution/project
+
     dotnet new globaljson --sdk-version 5.0.404
     dotnet new sln --name UmbDock
 
 ### Add the Umbraco Project
 
-
     dotnet new Umbraco -n UmbDock --friendly-name "Admin User" --email "admin@admin.com" --password "1234567890" --connection-string "Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Umbraco.mdf;Integrated Security=True"
+
+Or if you are on Linux, you will need acess to a SQL server instance - either standalone or running in Docker
+
+### Add the project to the solution, and install a starter kit
 
     dotnet sln add UmbDock
     dotnet add UmbDock package Clean
