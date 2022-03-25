@@ -26,7 +26,7 @@ If you want to re-create this from scratch, you can do the following. You'll nee
 
     dotnet new Umbraco -n UmbDock --friendly-name "Admin User" --email "admin@admin.com" --password "1234567890" --connection-string "Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Umbraco.mdf;Integrated Security=True"
 
-Or if you are on Linux, you will need acess to a SQL server instance - either standalone or running in Docker
+if you are on Linux, you will need acess to a SQL server instance - either standalone or running in Docker. In that case replace the Connectionstring with one to a valid database
 
 ### Add the project to the solution, and install a starter kit
 
@@ -57,7 +57,7 @@ Without this step, the project won't compile on Linux, but will compile in windo
 
 Copy the UmbData folder from Files into the Root. This has the data container set-up in it
 
-The database is in a local DB file for now - so let's MOVE the MDF files into a Docker database container and run them from in there.
+The actual database we created in a local DB file for now  - so let's MOVE the MDF files into a Docker database container and run them from in there.
 
 These files are Umbraco.mdf and Umbraco_log.ldf in the folder UmbDock\umbraco\Data
 
@@ -88,14 +88,17 @@ First create the Docker file by copying it from /Files/Umbdata/UmbDock/Dockerfil
 
 ## Network
 
-Because we're using the default "Bridge Network" we need to communicate from the application containers to the db container on IP address. So let's find that, and inspect the Bridge network.
+We need to define a custom bridge network to run this application under
 
-    docker network inspect bridge
+    docker network create -d bridge umbNet
 
-Put this into a Staging Connectionstring with a transform, but you won't need the non-standard port. Here my example is 172.17.0.2
+We will then connect our existing container to that network
 
-    "umbracoDbDSN": "Server=172.17.0.2;Database=UmbracoDb;User Id=sa;Password=SQL_password123;"
+    docker network connect umbNet umbdata
 
+Create a staging config file called appsettings.Staging.json and put this into a Staging Connectionstring with a transform. You will need the non-standard port setting 
+
+    "umbracoDbDSN": "Server=umbdata;Database=UmbracoDb;User Id=sa;Password=SQL_password123;"
 
 We've got our site, now we need to build an image which can be used to host the application. From the UmbDock folder run the following
 
@@ -103,36 +106,10 @@ We've got our site, now we need to build an image which can be used to host the 
 
 To run a single local instance
 
-    docker run --name umbdock00 -p 8000:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' -d umbdock
-
-To run several more
-
-    docker run --name umbdock01 -p 8001:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' -d umbdock
-    docker run --name umbdock02 -p 8002:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' -d umbdock
+    docker run --name umbdock00 -p 8000:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' --network=umbNet -d umbdock
 
 
-# Docker Compose
-
-Docker Compose lets you define multiple containers as part of an application - copy the docker-compose.yml file from the Files folder to the root.
-
-To start the sample run the folling command. 
-
-    docker compose up -d
-
-## To Clean up your images and re-build changes
-
-Run the following. 
-
-**NOTE - This will remove all unused images and volumes. If you have images from other applications you want to keep, don't run this.**
-
-    docker compose down
-    docker compose rm -f
-    docker image prune -a -f 
-    docker volume prune -f 
-
-
-
-# Reference
+# References
 
 ## Docker-compose 
 
