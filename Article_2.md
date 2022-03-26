@@ -1,4 +1,4 @@
-# Docker Compose
+# [WIP] Docker Compose
 
 Docker Compose lets you define multiple containers as part of an application - copy the docker-compose.yml file from the Files folder to the root.
 
