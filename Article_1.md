@@ -102,6 +102,28 @@ If you are on linux, please see [Instructions_1_Linux_Mac.md](Instructions_1_Lin
     dotnet add UmbDock package Clean
 
 
+### Modify csProj
+
+Edit the csproj file to change following element:
+
+    <!-- Force windows to use ICU. Otherwise Windows 10 2019H1+ will do it, but older windows 10 and most if not all winodws servers will run NLS -->
+    <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
+        <PackageReference Include="Microsoft.ICU.ICU4C.Runtime" Version="68.2.0.9" />
+        <RuntimeHostConfigurationOption Include="System.Globalization.AppLocalIcu" Value="68.2" />
+    </ItemGroup>
+
+Without this step, the project won't compile on Linux, but will compile in windows - This is needed even if you are using windows, since eventually the application will run in a docker container on Linux.
+
+
+### Now Run the site
+
+This will also create the database as a LocalDB
+
+    dotnet run --project UmbDock
+
+In the output you will see which port the site is running on. You should be able to browse to that site on any browser. You need to complete this step so that the databases are created.
+
+
 At this point the project is a normal Umbraco site running locally on your development machine. It works with source control, can be published to a web server, everything you would normally be able to do. 
 
 
@@ -110,22 +132,86 @@ At this point the project is a normal Umbraco site running locally on your devel
 
 Now that the application is running locally there’s still a problem. The database we have is SQL Server Express LocalDB - and as such doesn’t run on Linux or Mac. If you try to run it you’ll see the error “LocalDB is not supported on this platform.”
 
-To get around that we need a database server, and since we already have Docker, we can just run one in there and access it from our website container. To create this do the following in the cloned repository
-
-1. Copy the folder Files/UmbData folder from the files directory to the root. 
-2. Into the same folder you will need to copy the database files from UmbDock/umbraco/Data
+To get around that we need a database server, and since we already have Docker, we can just run one in there and access it from our website container. To create this do the following in your working folder
+ 
+- Copy the entire UmbData folder from Files/UmbData into the Root.
+- Copy the databases into the UmbData folder
+    - UmbDock/umbraco/Data/Umbraco.mdf to UmbData/Umbraco.mdf
+    - UmbDock/umbraco/Data/Umbraco_log.ldf to UmbData/Umbraco_log.ldf
 
 That folder contains a Dockerfile which defines the Database server we will create, as well as some additional steps to restore the database from our earlier step
 
+    FROM mcr.microsoft.com/mssql/server:2019-GDR1-ubuntu-16.04
 
+    ENV ACCEPT_EULA=Y
+    ENV SA_PASSWORD=SQL_password123
+    ENV MSSQL_PID=Express
+
+    USER root
+    
+    RUN mkdir /var/opt/sqlserver
+    
+    RUN chown mssql /var/opt/sqlserver
+    
+    ENV MSSQL_BACKUP_DIR="/var/opt/sqlserver"
+    ENV MSSQL_DATA_DIR="/var/opt/sqlserver"
+    ENV MSSQL_LOG_DIR="/var/opt/sqlserver"
+
+    COPY setup.sql /
+    COPY startup.sh /
+
+    COPY Umbraco.mdf /var/opt/sqlserver
+    COPY Umbraco_log.ldf /var/opt/sqlserver
+
+    ENTRYPOINT [ "/bin/bash", "startup.sh" ]
+    CMD [ "/opt/mssql/bin/sqlservr" ]
 
 The first line defines the image we will be using: SQL Server 2019 running on Ubuntu. After that we define our password for the SA account, which is the main SQL Admin account. 
 
 The key thing this file does after this is all done is launch Startup.sh, which is listed below. The main job of startup.sh is to sleep for 15 seconds while the sql server is starting up, and run setup.sql under the server admin (or sa) account. Note the password is also defined here.
 
+    #!/bin/bash
+    set -e
+
+    if [ "$1" = '/opt/mssql/bin/sqlservr' ]; then
+    # If this is the container's first run, initialize the application database
+    if [ ! -f /tmp/app-initialized ]; then
+        # Initialize the application database asynchronously in a background process. This allows a) the SQL Server process to be the main process in the container, which allows graceful shutdown and other goodies, and b) us to only start the SQL Server process once, as opposed to starting, stopping, then starting it again.
+        function initialize_app_database() {
+        # Wait a bit for SQL Server to start. SQL Server's process doesn't provide a clever way to check if it's up or not, and it needs to be up before we can import the application database
+        sleep 15s
+
+        #run the setup script to create the DB and the schema in the DB
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P SQL_password123 -d master -i setup.sql
+
+        # Note that the container has been initialized so future starts won't wipe changes to the data
+        touch /tmp/app-initialized
+        }
+        initialize_app_database &
+    fi
+    fi
+
+    exec "$@"
 
 
 The setup.sql script will re-attach the database to the sql server once it’s running.
+
+    USE [master]
+    GO
+
+    IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'UmbracoDb')
+    BEGIN
+
+        CREATE DATABASE [UmbracoDb] ON 
+        ( FILENAME = N'/var/opt/sqlserver/Umbraco.mdf' ),
+        ( FILENAME = N'/var/opt/sqlserver/Umbraco_log.ldf' )
+        FOR ATTACH
+
+    END;
+    GO
+
+    USE UmbracoDb;
+
 
 At this point if you go back to your umbraco project and edit your connectionstring to connect to this. Amend the appsettings.Development.json as follows:
 
@@ -136,7 +222,19 @@ Note : We’re using port 1400 rather than the normal 1433, since it’s possibl
 
 With that done, we can build the Docker database image
 
+    docker build --tag=umbdata .\UmbData
+
 And when that’s complete, run the docker SQL server - note again the port being used - internally the Docker image still uses 1433, but externally it uses 1400 so as not to conflict with any other local SQL servers
+
+    docker run --name umbdata -p 1400:1433 --volume sqlserver:/var/opt/sqlserver -d umbdata
+
+## Test the site still works
+
+At this point you can run the local site again, but it will talk to the Database container rather than the local DB
+
+    dotnet run --project UmbDock
+
+As before, the command will display which port should be used to browse for the site.
 
 
 # Part 3 : Running the application in Docker

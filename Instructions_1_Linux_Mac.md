@@ -4,18 +4,45 @@ These instructions are specific to Linux and Mac, which needs to be done in a sl
 
 ## 1 - Setup the Database Container
 
-Follow these instructions to setup the database container.
+Follow these instructions to setup the database container. Start with coping the entire UmbData folder from Files/UmbData into the Root.
 
-- Copy the entire UmbData folder from Files/UmbData into the Root.
-- Delete the following files
-    - setup.sql
-    - startup.sh
+### Amend the Dockerfile
 
-### Amend the Development Connectionstring
+Replace the existing Dockerfile with the following
 
-Update the developement string to use the new Database Container. Replace the relevant line in the file with the following. Note : The port is using 1400 as a non-standard port in case there is already SQL Server running on the local machine. 
+    FROM mcr.microsoft.com/mssql/server:2019-GDR1-ubuntu-16.04
 
-    "umbracoDbDSN": "Server=localhost,1400;Database=UmbracoDb;User Id=sa;Password=SQL_password123;"
+    ENV ACCEPT_EULA=Y
+    ENV SA_PASSWORD=SQL_password123
+    ENV MSSQL_PID=Express
+
+    USER root
+    
+    RUN mkdir /var/opt/sqlserver
+    
+    RUN chown mssql /var/opt/sqlserver
+    
+    ENV MSSQL_BACKUP_DIR="/var/opt/sqlserver"
+    ENV MSSQL_DATA_DIR="/var/opt/sqlserver"
+    ENV MSSQL_LOG_DIR="/var/opt/sqlserver"
+
+    ENTRYPOINT [ "/bin/bash", "startup.sh" ]
+    CMD [ "/opt/mssql/bin/sqlservr" ]
+
+Also amend the setup.sql file with the following. This change will create an empty database instead of restoring one. 
+
+    USE [master]
+    GO
+
+    IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'UmbracoDb')
+    BEGIN
+
+        CREATE DATABASE [UmbracoDb];
+
+    END;
+    GO
+
+    USE UmbracoDb;
 
 ### Build the database image. 
 
@@ -42,11 +69,7 @@ These are the instructions for Windows. If you are on a mac or linux machine you
 
 ### Start a new Umbraco website project
 
-    dotnet new Umbraco -n UmbDock --friendly-name "Admin User" --email "admin@admin.com" --password "1234567890" --connection-string "Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Umbraco.mdf;Integrated Security=True"
-
-Instructions for Linux or Mac:
-
-    dotnet new Umbraco -n UmbDock
+    dotnet new Umbraco -n UmbDock --friendly-name "Admin User" --email "admin@admin.com" --password "1234567890" --connection-string "Server=localhost,1400;Database=UmbracoDb;User Id=sa;Password=SQL_password123;"
 
 ### Add the project to the solution, and install a starter kit
 
@@ -67,21 +90,12 @@ Without this step, the project won't compile on Linux, but will compile in windo
 
 ### Now Run the site
 
-This will also create the database as a LocalDB
+This will also connect to the database container we previously created.
 
     dotnet run --project UmbDock
 
 In the output you willl see which port the site is running on. You should be able to browse to that site on any browser. You need to complete this step so that the databases are created.
 
-
-
-### Test the site still works
-
-At this point you can run the local site again, but it will talk to the Database container rather than the local DB
-
-    dotnet run --project UmbDock
-
-As before, the command will display which port should be used to browse for the site.
 
 ## 3 - Convert the website into a container
 
