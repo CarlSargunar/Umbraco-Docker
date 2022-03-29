@@ -43,7 +43,7 @@ For most of my examples, and indeed most production workloads typically run on L
 
 # Key Docker Concepts
 
-Now Docker is installed there are few things you need to know before you start creating containers and applications.
+Now Docker is installed there are few things you need to know before you start creating containers and applications. We won't be covering in depth here, but will link out to additional resources as needed
 
 ## What is Docker? 
 
@@ -67,6 +67,14 @@ The public repository from DockerHub can be found at https://hub.docker.com/.
 
 The definition file for your application, which describes the base image which is used, plus any steps required to compile and deploy the application, any configuration. It typically lives in the root of your application and gets put into source control alongside your application.
 
+## Networking
+
+Docker has several mechanisms to allow containers to communicate with each other, and with the host machine. These are as follows. In all modes, the containers are visible to the hsot.  
+- Bridge : The default network mode, any container can communicate with any other container, but only by IP address, not DNS.
+- User-defined Bridge : A named network, which allows containers in it to communicate with each other using DNS as well as IP address, but is not visible to any containers outside the network. 
+
+Other methods are available, but are beyond the scope of this article. For full details see the references.
+
 # Part 1 : Building an Umbraco container application
 
 Let’s start with a blank slate and create a new umbraco application running standalone on our local machine. This will be an Umbraco 9 site built on the .NET 5, but the samples will also work with .NET 6.
@@ -75,7 +83,23 @@ Let’s start with a blank slate and create a new umbraco application running st
 
 First ensure the Umbraco templates are installed
 
-[INSTRUCTIONS]
+    dotnet new -i Umbraco.Templates
+
+Set the SDK Version being used and Create solution/project. This will create a global file defining the 
+
+    dotnet new globaljson --sdk-version 5.0.404
+    dotnet new sln --name UmbDock
+
+Start a new Umbraco website project. Note : This will only work on windows. 
+
+    dotnet new Umbraco -n UmbDock --friendly-name "Admin User" --email "admin@admin.com" --password "1234567890" --connection-string "Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Umbraco.mdf;Integrated Security=True"
+
+If you are on linux, please see [Instructions_1_Linux_Mac.md](Instructions_1_Linux_Mac.md)
+
+### Add the project to the solution, and install a starter kit
+
+    dotnet sln add UmbDock
+    dotnet add UmbDock package Clean
 
 
 At this point the project is a normal Umbraco site running locally on your development machine. It works with source control, can be published to a web server, everything you would normally be able to do. 
@@ -171,3 +195,48 @@ Once the image is build we can run the image.
 
 
 If all goes well, you’ll be able to access the site on any browser at http://localhost:8000/
+
+# Conclusions
+
+In this walkthrough we've created 2 containers, one for our application and then one for the database server, and run them locally on our docker instance. We've touched on Docker images, Networking and some of the requirements to get this up and running. 
+
+In the next part we will compose an application using Docker Compose to host multiple instances of the website, and learn more about Docker specific technologies. Hopefully you enjoyed it, and will return for part 2.
+
+# References
+
+## Docker
+
+- 
+- Networking : https://docs.docker.com/network/
+- Docker Compose : https://docs.docker.com/compose/reference/
+- Docker Hub : https://docs.docker.com/docker-hub/
+- Storage : https://docs.docker.com/storage/
+    - Volumes : https://docs.docker.com/storage/volumes/
+
+## Umbraco Docker    
+
+- https://swimburger.net/blog/umbraco/how-to-run-umbraco-9-as-a-linux-docker-container
+- https://codeshare.co.uk/blog/umbraco-9-useful-snippets/    
+
+## Networking
+    
+- https://www.tutorialworks.com/container-networking/
+
+## .NET
+    
+- https://github.com/dotnet/dotnet-docker/tree/main/samples/aspnetapp
+
+## Database
+    
+- https://bigdata-etl.com/how-to-run-microsoft-sql-server-database-using-docker-and-docker-compose/
+- https://www.abhith.net/blog/create-sql-server-database-from-a-script-in-docker-compose/
+
+## Running on Linux:
+
+- https://our.umbraco.com/forum/umbraco-9/107393-unable-to-deploy-v9-site-to-linux-web-app-on-azure
+
+## Line Endings:
+
+- https://www.aleksandrhovhannisyan.com/blog/crlf-vs-lf-normalizing-line-endings-in-git/
+
+
