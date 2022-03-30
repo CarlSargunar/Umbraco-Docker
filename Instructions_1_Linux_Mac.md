@@ -4,7 +4,7 @@ These instructions are specific to Linux and Mac, which needs to be done in a sl
 
 ## 1 - Setup the Database Container
 
-Follow these instructions to setup the database container. Start with coping the entire UmbData folder from Files/UmbData into the Root.
+Follow these instructions to setup the database container. Start with copying the entire UmbData folder from Files/UmbData into the Root.
 
 ### Amend the Dockerfile
 
