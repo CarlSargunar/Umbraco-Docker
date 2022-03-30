@@ -134,10 +134,10 @@ Now that the application is running locally there’s still a problem. The datab
 
 To get around that we need a database server, and since we already have Docker, we can just run one in there and access it from our website container. To create this do the following in your working folder
  
-- Copy the entire UmbData folder from Files/UmbData into the Root.
-- Copy the databases into the UmbData folder
-    - UmbDock/umbraco/Data/Umbraco.mdf to UmbData/Umbraco.mdf
-    - UmbDock/umbraco/Data/Umbraco_log.ldf to UmbData/Umbraco_log.ldf
+    1. Copy the entire UmbData folder from Files/UmbData into the Root.
+    2. Copy the databases into the UmbData folder
+        - UmbDock/umbraco/Data/Umbraco.mdf to UmbData/Umbraco.mdf
+        - UmbDock/umbraco/Data/Umbraco_log.ldf to UmbData/Umbraco_log.ldf
 
 That folder contains a Dockerfile which defines the Database server we will create, as well as some additional steps to restore the database from our earlier step
 
@@ -224,9 +224,18 @@ With that done, we can build the Docker database image
 
     docker build --tag=umbdata .\UmbData
 
+That will give you a database image in your local Docker host
+
+![Docker Image](media/docker-db-image.png)
+
 And when that’s complete, run the docker SQL server - note again the port being used - internally the Docker image still uses 1433, but externally it uses 1400 so as not to conflict with any other local SQL servers
 
     docker run --name umbdata -p 1400:1433 --volume sqlserver:/var/opt/sqlserver -d umbdata
+
+At which point you'll see the database container instance running
+
+![Docker Image](media/docker-db-container.png)
+
 
 ## Test the site still works
 
@@ -239,7 +248,7 @@ As before, the command will display which port should be used to browse for the 
 
 # Part 3 : Running the application in Docker
 
-To run the project in Docker, we need to create a new file in the root of our web project called Dockerfile. 
+To run the project in Docker, we need to create a new file in the root of our web project called Dockerfile. This file has been created in Files/UmbDock/Dockerfile which you can copy to the UmbDock folder
 
     # Use the SDK image to build and publish the website
     FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
@@ -274,9 +283,9 @@ The default bridge network is just the network that all containers are automatic
 
 In a user-defined bridge network you can communicate using the network name, but only containers which are explicitly added to the network can communicate with each other using the container name. 
 
-First we will create the container.
+First we will create the container. If the website is still running, stop it first by running Ctrl + C
 
-  docker network create -d bridge umbNet
+    docker network create -d bridge umbNet
 
 We’re then going to connect our database container to that network. Note our container name (umbdata) is how we add it.
 
@@ -286,10 +295,19 @@ We’re then going to connect our database container to that network. Note our c
 Now that we’ve got a database container running and connected to our user-defined network, we can build our application image.
 
     docker build --tag=umbdock .\UmbDock
+
+That will give you a website image in Docker. Note here you can see the database image is in use as it's running, but the web image is not in use. 
+
+![Docker Image](media/docker-web-image.png)
+
  
 Once the image is build we can run the image.
 
     docker run --name umbdock00 -p 8000:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' --network=umbNet -d umbdock
+
+You'll see this in your containers section in Docker.
+
+![Docker Image](media/docker-web-container.png)
 
 
 If all goes well, you’ll be able to access the site on any browser at http://localhost:8000/
