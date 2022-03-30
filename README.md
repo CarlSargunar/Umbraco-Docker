@@ -18,7 +18,7 @@ This part will cover
 - Creating a docker container for the database sever.
 - Converting the application to run in a docker container.
 
-The copy for the Skrift Article to go along with the repository is in [Article_1.md](Article_1.md).
+The copy for the Skrift Article to go along with the repository is in [Article_1.md](Article_1.md) which also contains the instructions you need to run through.
 
-Once you have cloned the repository, follow the instructions in [Instructions_1.md](Instructions_1.md)
+If you are on a Mac or Linux then follow the instructions in [Instructions_1_Linux_Mac.md](Instructions_1_Linux_Mac.md) instead.
 
