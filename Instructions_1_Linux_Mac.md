@@ -116,6 +116,8 @@ We will then connect our existing container to that network
 
     docker network connect umbNet umbdata
 
+### Connectionstring for Application Container
+
 Create a staging config file on the website called appsettings.Staging.json by copying the existing appsettings.Development.json file. 
 
 Amend the connectionstring with the following. You will need the non-standard port setting 

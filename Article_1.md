@@ -291,6 +291,15 @@ We’re then going to connect our database container to that network. Note our c
 
     docker network connect umbNet umbdata
 
+### Connectionstring for Application Container
+
+Create a staging config file on the website called appsettings.Staging.json by copying the existing appsettings.Development.json file. 
+
+Amend the connectionstring with the following. You will need the non-standard port setting 
+
+    "umbracoDbDSN": "Server=umbdata;Database=UmbracoDb;User Id=sa;Password=SQL_password123;"
+
+
 # Building the application container image
 Now that we’ve got a database container running and connected to our user-defined network, we can build our application image.
 
