@@ -303,7 +303,7 @@ That will give you a website image in Docker. Note here you can see the database
  
 Once the image is build we can run the image.
 
-    docker run --name umbdock00 -p 8000:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' --network=umbNet -d umbdock
+    docker run --name umbdock -p 8000:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' --network=umbNet -d umbdock
 
 You'll see this in your containers section in Docker.
 

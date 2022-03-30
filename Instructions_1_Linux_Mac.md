@@ -104,7 +104,7 @@ In the output you willl see which port the site is running on. You should be abl
 
 ### Create the Dockerfile
 
-Copy the Docker file by copying it from /Files/Umbdata/UmbDock/Dockerfile to UmbDock/Dockerfile.
+Copy the Docker file by from /Files/Umbdata/UmbDock/Dockerfile to UmbDock/Dockerfile.
 
 ### Network
 
@@ -126,11 +126,11 @@ Amend the connectionstring with the following. You will need the non-standard po
 
 We've got our site, now we need to build an image which can be used to host the application. From the UmbDock folder run the following
 
-    docker build --tag=umbdock .\UmbDock
+    docker build --tag=umbdock ./UmbDock
 
 To run a single local instance
 
-    docker run --name umbdock00 -p 8000:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' --network=umbNet -d umbdock
+    docker run --name umbdock -p 8000:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' --network=umbNet -d umbdock
 
 
 
