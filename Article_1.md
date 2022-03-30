@@ -316,6 +316,8 @@ If all goes well, you’ll be able to access the site on any browser at http://l
 
 In this walkthrough we've created 2 containers, one for our application and then one for the database server, and run them locally on our docker instance. We've touched on Docker images, Networking and some of the requirements to get this up and running. 
 
+I deliberately didn't go into too much detail on any one area of Docker as it is a LOT to learn in one go. I wanted to help get you up and running as quickly and painlessly as possible, and to give you something you can refer to for future experimentation, something to build on. 
+
 In the next part we will compose an application using Docker Compose to host multiple instances of the website, and learn more about Docker specific technologies. Hopefully you enjoyed it, and will return for part 2.
 
 # References
