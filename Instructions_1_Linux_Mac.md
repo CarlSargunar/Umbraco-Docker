@@ -26,10 +26,13 @@ Replace the existing Dockerfile with the following
     ENV MSSQL_DATA_DIR="/var/opt/sqlserver"
     ENV MSSQL_LOG_DIR="/var/opt/sqlserver"
 
+    COPY setup.sql /
+    COPY startup.sh /
+
     ENTRYPOINT [ "/bin/bash", "startup.sh" ]
     CMD [ "/opt/mssql/bin/sqlservr" ]
 
-Also amend the setup.sql file with the following. This change will create an empty database instead of restoring one. 
+Amend the setup.sql file with the following. This change will create an empty database instead of restoring one. 
 
     USE [master]
     GO
@@ -48,7 +51,7 @@ Also amend the setup.sql file with the following. This change will create an emp
 
 Create a docker image for the database with the tag umbdata. Note : tags need to be lower case.
 
-    docker build --tag=umbdata .\UmbData
+    docker build --tag=umbdata ./UmbData
 
 Run the database container with the ame umbdata. We're using a non-standard port in case you have a local SQL server.
 
