@@ -321,6 +321,11 @@ You'll see this in your containers section in Docker.
 
 If all goes well, you’ll be able to access the site on any browser at http://localhost:8000/
 
+
+# Companion video
+
+[![Video Walkthrough Part 1](https://img.youtube.com/vi/b78PzlPKykk/0.jpg)](https://www.youtube.com/watch?v=b78PzlPKykk)
+
 # Conclusions
 
 In this walkthrough we've created 2 containers, one for our application and then one for the database server, and run them locally on our docker instance. We've touched on Docker images, Networking and some of the requirements to get this up and running. 
