@@ -17,17 +17,16 @@ Replace the existing Dockerfile with the following
     ENV MSSQL_PID=Express
 
     USER root
-    
-    RUN mkdir /var/opt/sqlserver
-    
-    RUN chown mssql /var/opt/sqlserver
-    
+
     ENV MSSQL_BACKUP_DIR="/var/opt/sqlserver"
     ENV MSSQL_DATA_DIR="/var/opt/sqlserver"
     ENV MSSQL_LOG_DIR="/var/opt/sqlserver"
 
     COPY setup.sql /
     COPY startup.sh /
+
+    RUN rm -f /var/opt/sqlserver/UmbracoDb.mdf
+    RUN rm -f /var/opt/sqlserver/UmbracoDb_log.ldf
 
     ENTRYPOINT [ "/bin/bash", "startup.sh" ]
     CMD [ "/opt/mssql/bin/sqlservr" ]
@@ -67,7 +66,7 @@ These are the instructions for Windows. If you are on a mac or linux machine you
 
 ### Set the SDK Version being used and Create solution/project
 
-    dotnet new globaljson --sdk-version 5.0.404
+    dotnet new globaljson --sdk-version 6.0.101
     dotnet new sln --name UmbDock
 
 ### Start a new Umbraco website project
@@ -85,8 +84,12 @@ Edit the csproj file to change following element:
 
     <!-- Force windows to use ICU. Otherwise Windows 10 2019H1+ will do it, but older windows 10 and most if not all winodws servers will run NLS -->
     <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
-        <PackageReference Include="Microsoft.ICU.ICU4C.Runtime" Version="68.2.0.9" />
-        <RuntimeHostConfigurationOption Include="System.Globalization.AppLocalIcu" Value="68.2" />
+      <PackageReference Include="Microsoft.ICU.ICU4C.Runtime" Version="68.2.0.9" />
+
+      <RuntimeHostConfigurationOption
+        Condition="$(RuntimeIdentifier.StartsWith('linux')) Or $(RuntimeIdentifier.StartsWith('win')) Or ('$(RuntimeIdentifier)' == '' And !$([MSBuild]::IsOSPlatform('osx')))"
+        Include="System.Globalization.AppLocalIcu"
+        Value="68.2.0.9" />
     </ItemGroup>
 
 Without this step, the project won't compile on Linux, but will compile in windows - This is needed even if you are using windows, since eventually the application will run in a docker container on Linux.
