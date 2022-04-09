@@ -25,9 +25,6 @@ Replace the existing Dockerfile with the following
     COPY setup.sql /
     COPY startup.sh /
 
-    RUN rm -f /var/opt/sqlserver/UmbracoDb.mdf
-    RUN rm -f /var/opt/sqlserver/UmbracoDb_log.ldf
-
     ENTRYPOINT [ "/bin/bash", "startup.sh" ]
     CMD [ "/opt/mssql/bin/sqlservr" ]
 
