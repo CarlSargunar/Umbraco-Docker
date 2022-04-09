@@ -87,7 +87,7 @@ First ensure the Umbraco templates are installed
 
 Set the SDK Version being used and Create solution/project. This will create a global file defining the 
 
-    dotnet new globaljson --sdk-version 5.0.404
+    dotnet new globaljson --sdk-version 6.0.1
     dotnet new sln --name UmbDock
 
 Start a new Umbraco website project. Note : This will only work on windows. 
