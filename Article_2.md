@@ -24,7 +24,7 @@ There are several options for managing storage in containers, and these are thro
 
 I will focus on Volumes, as they are the most common option, and the recommended way to access storage outside the container instance.
 
-## Volumes
+## Creating Volumes
 
 That's where Volumes come in - a docker volume lets you specity a path on the host machine, and then mount that path into the container. This means that when you delete the container, the data is not lost as long as the volume is not deleted. Additionally, if you use the same volume with more than one container, they will share the same data. This has the added benefit of making it easier to share data between containers, and to persist data between restarts.
 
@@ -33,6 +33,8 @@ That's where Volumes come in - a docker volume lets you specity a path on the ho
 # References
 
 - Docker Volumes :  https://docs.docker.com/storage/volumes/
+
+
 
 
 # [WIP] Docker Compose
