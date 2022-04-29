@@ -47,12 +47,20 @@ In the first part of this series we ran the umbraco website container using this
 
 This created a volume for the umbraco logs diretory and the media folder - both would persist between restarts. 
 
+# Networks
+
+In the previous part I covered a little about docker networks, and I'll add a little to it in this part - but there's a lot more to networking and it's a huge topic.
+
 
 
 # References
 
 - Docker Volumes :  https://docs.docker.com/storage/volumes/
+- Docker Compose : https://docs.docker.com/compose/
 
+## Further Reading
+
+- Docker Swarm vs Kubernetes : https://circleci.com/blog/docker-swarm-vs-kubernetes/
 
 
 
