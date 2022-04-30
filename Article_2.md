@@ -98,10 +98,12 @@ Now that I have covered networking, and storage the last part, and possibly the 
 
 ### Dockerfile
 
-This is a Docker Fuile
+In the previous article we created 2 docker containers, each with their own Dockerfiles. 
 
 
 ### Docker Compose
+
+
 
 # References
 
