@@ -1,4 +1,4 @@
-# Umbraco and docker - Part Deux : The Difficult Second Album
+# Umbraco and Docker - Part Deux : The Difficult Second Album
 
 Previously I covered the basic concepts of Docker. If you followed the examples through you would have created a database container, and a website container running Umbraco 9, and run them together in the same Docker network. I didn't cover networking, or another concept - Dockerfiles in a lot of detail as I wanted the first part to haev a low barrier to entry. 
 
@@ -8,6 +8,15 @@ In this second part we will cover these concepts in a bit more detail, and cover
 - Docker Networking : More details around how to connect containers to each other
 - DockerFile : Defining the componentsand build steps required to build a container image
 - Docker Compose : A tool to manage multiple containers in a single file
+
+## Prereqisites
+
+It's expected that if you have followed the first part of this tutorial, you have already installed Docker, and have created a database container, and a website container running Umbraco 9. This article will build on the code used from article 1, so if you haven't completed that first part, you should go back to [Article_1.](./Article_1.md)
+
+## Umbraco Version
+
+This article uses version 9 of Umbraco, which does not currently support SQLite, but this is a feature of Umbraco 10, which will be released during Codegarden 2022. I will update this github repo to use Umbraco 10 when it is released.
+
 
 ## It's all about storage
 
@@ -84,7 +93,15 @@ There are other networking types available, but those are less common, and are m
 
 ## DockerFile and Docker Compose
 
-Now that I have covered networking, and storage, and building on the previous article notes on Dockerfiles, the final piece for Docker with Umbraco 101 is the Docker Compose file. This file lets you specify a collection of containers, and the relationships between them, including specifying networks, storage, names, ports - everything you need to 
+Now that I have covered networking, and storage the last part, and possibly the most important covers Dockerfile and Docker Compose. The Dockerfile is a file which is used to build a container image, and the Docker Compose file is a file which is used to manage multiple containers in a single file. Thus you define each container in your application with it's on Dockerfile, and you define the application as a whole with 
+
+
+### Dockerfile
+
+This is a Docker Fuile
+
+
+### Docker Compose
 
 # References
 
@@ -92,8 +109,7 @@ Now that I have covered networking, and storage, and building on the previous ar
 - Docker Network : https://docs.docker.com/network/
     - Bridge Network : https://docs.docker.com/network/bridge/
     - Host Network : https://docs.docker.com/network/host/
-    - Overlay Network : https://docs.docker.com/network/overlay/
-    - 
+- Dockerfile : https://docs.docker.com/engine/reference/builder/
 - Docker Compose : https://docs.docker.com/compose/
 
 ## Further Reading

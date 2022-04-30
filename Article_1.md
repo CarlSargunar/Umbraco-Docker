@@ -20,6 +20,10 @@ In order to run this application you will need the following installed on your m
 - .NET SDK version 5
     - This will also work with .NET version 6, but you need the SDK
 
+## Umbraco Version
+
+This article uses version 9 of Umbraco, which does not currently support SQLite, but this is a feature of Umbraco 10, which will be released during Codegarden 2022. I will update this github repo to use Umbraco 10 when it is released.
+
 ## Structure for this walkthrough
 
 This is broken into 2 main parts, the first part of which is this article, broken down as follows
