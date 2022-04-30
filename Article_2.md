@@ -1,4 +1,4 @@
-# Umbraco and docker - Part Deux : The difficuly second album
+# Umbraco and docker - Part Deux : The difficult second album
 
 In the last part, I covered the basic concepts of Docker. If you followed the examples through you would have created a database container, and a website container running Umbraco 9, and run them together in the same Docker network. I didn't cover networking, or another concept - Dockerfiles in a lot of detail as I wanted the first part to haev a low barrier to entry. 
 
