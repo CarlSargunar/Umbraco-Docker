@@ -1,6 +1,6 @@
-# Umbraco and docker - Part Deux : The difficult second album
+# Umbraco and docker - Part Deux : The Difficult Second Album
 
-In the last part, I covered the basic concepts of Docker. If you followed the examples through you would have created a database container, and a website container running Umbraco 9, and run them together in the same Docker network. I didn't cover networking, or another concept - Dockerfiles in a lot of detail as I wanted the first part to haev a low barrier to entry. 
+Previously I covered the basic concepts of Docker. If you followed the examples through you would have created a database container, and a website container running Umbraco 9, and run them together in the same Docker network. I didn't cover networking, or another concept - Dockerfiles in a lot of detail as I wanted the first part to haev a low barrier to entry. 
 
 In this second part we will cover these concepts in a bit more detail, and cover a couple of other concepts including : 
 
@@ -49,13 +49,44 @@ This created a volume for the umbraco logs diretory and the media folder - both 
 
 # Networks
 
-In the previous part I covered a little about docker networks, and I'll add a little to it in this part - but there's a lot more to networking and it's a huge topic.
+In the previous part I covered a little about docker networks, and I'll add a little to it in this part - but there's a lot more to networking and it's a huge topic, so I'm only going to cover enough to be dangerous 😊.
+
+## Ports
+
+Before diving into networks, we need to touch on ports - when a container is created, you define which ports internally are accessable outside the container. If you don't, the container will still run, but it won't be accessible from outside the container. In the CLI, ports are exposed using the -p flag, and are defined as host:container.
+
+In our previous example we exposed port 8000 externally mapped to port 80 internally for the website containers, and port 1400 externally mapped internally to port 1433 for the database container.
+
+    docker run --name umbdock -p 8000:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' --network=umbNet -d umbdock
+
+    docker run --name umbdata -p 1400:1433 --volume sqlserver:/var/opt/sqlserver -d umbdata
+
+## Bridge Network 
+
+The default network in docker is "bridge" networking, which is automatically assigned to containers unless specified. All containers in this network appear on the host IP address, but that also means that if you have multiple website containers, you can't use the same extenal port for all of them - you will need to map a different port per container. 
+
+### Default Bridge Network
+
+The standard bridge network also doesn't let the containers communicate with each other usnig DNS, only by their internal IP address, and that's not something that's available to you at design time, only run time. If you wanted to keep using the bridge network, you will need to query the contianer IP address at runtime and use that to address it. Every container can see every other container in this network, but that ususally isn't a problem. The IP address assigned will also change on all container restarts, so you can't rely on it being the same every time.
+
+### User Defined Bridge Network
+
+The main difference with this sort is that you can specify a name for this network, but also that containers can access each other using their container name. This is great when you are creating a connectionstring for a website to access a database for example - so even though the IP address isn't going to be static, it doesn't matter. You access the container you need by it's name. 
+
+These are also called Custom bridge networks, and the other thing docker does is isolate all custom bridge networks from all others. Any container outside the network won't be able to see containers in the network, they will be isolated.
+
+## Host Networks
 
 
 
 # References
 
 - Docker Volumes :  https://docs.docker.com/storage/volumes/
+- Docker Network : https://docs.docker.com/network/
+    - Bridge Network : https://docs.docker.com/network/bridge/
+    - Host Network : https://docs.docker.com/network/host/
+    - Overlay Network : https://docs.docker.com/network/overlay/
+    - 
 - Docker Compose : https://docs.docker.com/compose/
 
 ## Further Reading
