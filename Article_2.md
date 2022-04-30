@@ -79,7 +79,11 @@ These are also called Custom bridge networks, and the other thing docker does is
 
 Host networking is used when you have a container which basically needs to communicate as if it's running natively on the host computer - it will be able to access the hosts network. That's evident when you create the container - you don't need to spricfy any port mappings. Ports on the container are natively mapped to the host computer network
 
-There are
+There are other networking types available, but those are less common, and are more advanced, so I'm not going to cover them here - if you want to find out more there are reference links in the footer. 
+
+## Docker Compose
+
+Now that I have covered networking, and storage, and building on the previous article notes on Dockerfiles
 
 # References
 
