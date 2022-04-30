@@ -6,6 +6,7 @@ In this second part we will cover these concepts in a bit more detail, and cover
 
 - Docker Volumes : A way to share data between containers, and to persist data between restarts
 - Docker Networking : More details around how to connect containers to each other
+- DockerFile : Defining the componentsand build steps required to build a container image
 - Docker Compose : A tool to manage multiple containers in a single file
 
 ## It's all about storage
@@ -81,9 +82,9 @@ Host networking is used when you have a container which basically needs to commu
 
 There are other networking types available, but those are less common, and are more advanced, so I'm not going to cover them here - if you want to find out more there are reference links in the footer. 
 
-## Docker Compose
+## DockerFile and Docker Compose
 
-Now that I have covered networking, and storage, and building on the previous article notes on Dockerfiles
+Now that I have covered networking, and storage, and building on the previous article notes on Dockerfiles, the final piece for Docker with Umbraco 101 is the Docker Compose file. This file lets you specify a collection of containers, and the relationships between them, including specifying networks, storage, names, ports - everything you need to 
 
 # References
 
