@@ -16,28 +16,6 @@ services:
     networks:
       - umbnet
 
-  # This is the BAck Office container. It exposes the port 80, and stored media and Umbraco logs on
-  # a volume so they are accessable outside the container.
-  # It 
-  umb-backoffice:
-    build:
-      context: ./UmbDock
-      dockerfile: Dockerfile
-    volumes:
-      - media:/app/wwwroot/media
-      - logs:/app/umbraco/Logs
-    restart: always
-    environment:
-     - ASPNETCORE_ENVIRONMENT=Production
-    # This is the external port the website will be visible from : http://localhost:5080/
-    # The Umbraco URL is : http://localhost:5080/umbraco
-    ports:
-      - "5080:80"
-    depends_on:
-      - umb-data
-    networks:
-      - umbnet
-
   # This is the web container. It exposes the port 80, and stored media and Umbraco logs on
   # a volume so they are accessable outside the container.
   # It 
@@ -54,33 +32,11 @@ services:
     # This is the external port the website will be visible from : http://localhost:5080/
     # The Umbraco URL is : http://localhost:5080/umbraco
     ports:
-      - "5081:80"
+      - "5080:80"
     depends_on:
       - umb-data
     networks:
-      - umbnet    
-
-  # This is the web container. It exposes the port 80, and stored media and Umbraco logs on
-  # a volume so they are accessable outside the container.
-  # It 
-  umb-frontend-2:
-    build:
-      context: ./UmbDock
-      dockerfile: Dockerfile
-    volumes:
-      - media:/app/wwwroot/media
-      - logs:/app/umbraco/Logs
-    restart: always
-    environment:
-     - ASPNETCORE_ENVIRONMENT=Production
-    # This is the external port the website will be visible from : http://localhost:5080/
-    # The Umbraco URL is : http://localhost:5080/umbraco
-    ports:
-      - "5082:80"
-    depends_on:
-      - umb-data
-    networks:
-      - umbnet           
+      - umbnet        
 
 volumes:
   media:
