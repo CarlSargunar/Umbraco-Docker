@@ -90,7 +90,22 @@ Now that I have covered networking, and storage the last part, and possibly the 
 
 ### Dockerfile
 
-In the previous article we created 2 docker containers, each with their own Dockerfiles. These Dockerfiles have one purpose - to define the image that the container will use. 
+In the previous article we created 2 docker containers, each with their own Dockerfiles. These Dockerfiles have one purpose - to define the image that the container will use. It starts with defining what the base image will be, and then it defines the commands that will be run when the container is started. The advice I've always been given is to use many small steps in the Dockerfile, and to use a consistant image for containers. The aim is always to keep the container image size as small as possible to keep resource use down and set you up for scalability from day 1.
+
+Additional to defining the starting container size you can really do everything you can in the commandline in a Docker File including and not restricted to
+
+- Run commands, which in turn can do basically anything you want including
+    - Downloading dependancies and installing packages
+    - Compiling code
+    - Running tests
+    - Attaching databases, starting indexes
+    - Copying/deleting files, images, directories
+    - Anything you can do on the command line
+- Defining environmental variables
+- Expose ports from the contaienr to the outside world
+- Defining the startup command for the container, the process which will run when the container is started. 
+
+With a docker file we can create a docker image, which can be saved locally, or pushed to a private or public repository, and re-used by other applications. 
 
 
 ### Docker Compose

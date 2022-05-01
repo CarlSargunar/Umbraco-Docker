@@ -14,6 +14,8 @@ ENV MSSQL_BACKUP_DIR="/var/opt/sqlserver"
 ENV MSSQL_DATA_DIR="/var/opt/sqlserver"
 ENV MSSQL_LOG_DIR="/var/opt/sqlserver"
 
+EXPOSE 1433/tcp
+
 COPY setup.sql /
 COPY startup.sh /
 
