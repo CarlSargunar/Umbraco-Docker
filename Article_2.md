@@ -90,7 +90,7 @@ Now that I have covered networking, and storage the last part, and possibly the 
 
 ### Dockerfile
 
-In the previous article we created 2 docker containers, each with their own Dockerfiles. 
+In the previous article we created 2 docker containers, each with their own Dockerfiles. These Dockerfiles have one purpose - to define the image that the container will use. 
 
 
 ### Docker Compose
