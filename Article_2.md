@@ -128,7 +128,9 @@ First copy the docker-compose.yml file from the Files folder into the root. Open
 #### Services 
 ---
 
-This defines the containers we want to make up our application. Each service defines the associated docker file it will use, the ports it needs to expose, the volumes it will need and the network it will be part of. 
+This defines the containers we want to make up our application. Each service defines the associated docker file it will use, the ports it needs to expose, the volumes it will need, the network it will be part of and any specific environmental variables. 
+
+The ability to set environmental variables is important since it allows us to also use config transformations to define a connectionstring for the "Production" environment vs the staging or local dev environment.
 
 There are 2 containers defined - the database and the website container, and each is named accordingly, and has a list of all the relevant ports, volumes and network.
 
@@ -142,11 +144,45 @@ As with volumes, each service uses a specific network, and these networks need t
 
 ## Starting things up
 ---
-When you're ready to start up the application, as long as the docker-compost.yml file has been copied to the root of the application, if you run the following command it will start things up
+When you're ready to start up the application therea are 2 steps we need to take. 
 
-    docker compose up
+First copy the docker-compose.yml file has been copied to the root of the application. 
 
-That's the extent of the user interaction in this part. Once the services have started up
+The next thing we need is to create a configuration file for the production environment, which will be what we will be running - copy the existing appsettings.Staging.json to a new file called appsettings.Production.json. 
+
+The contents of this file will be the same as the staging file, it's just there to illustrate the ability to change settings with environmental variables.
+
+Once that's done, run the following command it will start things up.
+
+    docker compose up -d
+
+That's the extent of the user interaction in this part. That's it - this will start your entire application in disconnected mode, which means it'll continue to run after you close the terminal.
+
+If you look at Docker desktop, you should see your application listed, but it will appear differntly to how it might have previously, since it is now being created through docker compose, so all the containers are grouped together.
+
+![Docker Application](/media/docker-compose.png)
+
+You'll be able to access your website at http://localhost:5080
+
+That's it - all done!
+
+Hopefully you've enjoyed this experience, and have learned a little about how Docker, and docker compose can be used to host and test applications
+
+
+## Troubleshooting
+---
+If you ever need to stop the application and take it offline, run the following
+
+    docker compose down
+
+If you wish to wipe the slate clean, you can remove all your containers, images and volumes by running the following. 
+
+**NOTE - This will remove all unused images and volumes. If you have images from other applications you want to keep, don't run this.**
+
+    docker compose down
+    docker compose rm -f
+    docker image prune -a -f 
+    docker volume prune -f 
 
 
 # References
@@ -174,11 +210,3 @@ To start the sample run the folling command.
 
 ## To Clean up your images and re-build changes
 
-Run the following. 
-
-**NOTE - This will remove all unused images and volumes. If you have images from other applications you want to keep, don't run this.**
-
-    docker compose down
-    docker compose rm -f
-    docker image prune -a -f 
-    docker volume prune -f 

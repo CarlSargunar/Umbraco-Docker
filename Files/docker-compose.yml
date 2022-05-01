@@ -4,7 +4,7 @@ services:
 
   # This is the database container. The exposed volume means that the SQL DATA and LOG files
   # are stored off the container, in case the container is restarted.
-  umb-data:
+  umbdata:
     build:
       context: ./Umbdata
       dockerfile: Dockerfile
@@ -19,7 +19,7 @@ services:
   # This is the web container. It exposes the port 80, and stored media and Umbraco logs on
   # a volume so they are accessable outside the container.
   # It 
-  umb-frontend:
+  umbweb:
     build:
       context: ./UmbDock
       dockerfile: Dockerfile
@@ -34,7 +34,7 @@ services:
     ports:
       - "5080:80"
     depends_on:
-      - umb-data
+      - umbdata
     networks:
       - umbnet        
 
