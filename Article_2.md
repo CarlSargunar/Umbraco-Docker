@@ -136,7 +136,9 @@ There are 3 services defined - the database and the two website containers. Each
 
 #### Volumes
 
-Each service refers to the volumes it uses, but these need to be defined in the Volumes section of the docker-compose file. You can define the name, the location and type of the volume in this section
+Each service refers to the volumes it uses, but these need to be defined in the Volumes section of the docker-compose file. You can define the name, the location and type of the volume in this section.
+
+In this docker compose, there are 2 websites running attached to the same database server, and due to their shared volumes they will also share the media and logs folder, so any media added to one site will be available to the other site server. 
 
 #### Networks
 
