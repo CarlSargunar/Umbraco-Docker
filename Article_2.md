@@ -164,7 +164,7 @@ If you look at Docker desktop, you should see your application listed, but it wi
 
 ![Docker Application](/media/docker-compose.png)
 
-You'll be able to access your website at http://localhost:5080
+You'll be able to access your website at http://localhost:5080 and the 2nd site at http://localhost:5080. This is a typical arrangement where you might want to load-balance your umbraco content delivery websites, or have a separate editing and publishing environment - the details of how to load balance is beyond the scope of this, but there are some great courses available from Umbraco if you want further info.
 
 That's it - all done!
 
