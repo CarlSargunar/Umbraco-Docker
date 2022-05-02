@@ -1,28 +1,28 @@
 # Umbraco and Docker - Part Deux : The Difficult Second Album
 
-Previously I covered the basic concepts of Docker. If you followed the examples through you would have created a database container, and a website container running Umbraco 9, and run them together in the same Docker network. I didn't cover networking, or another concept - Dockerfiles in a lot of detail as I wanted the first part to haev a low barrier to entry. 
+Previously I covered the basic concepts of Docker. If you followed the examples through you would have created a database container, and a website container running Umbraco 9, and run them together in the same Docker network. I didn't cover networking, or another concept - Dockerfiles in a lot of detail as I wanted the first part to have a low barrier to entry. 
 
 In this second part we will cover these concepts in a bit more detail, and cover a couple of other concepts including : 
 
 - Docker Volumes : A way to share data between containers, and to persist data between restarts
 - Docker Networking : More details around how to connect containers to each other
-- DockerFile : Defining the componentsand build steps required to build a container image
+- DockerFile : Defining the components and build steps required to build a container image
 - Docker Compose : A tool to manage multiple containers in a single file
 
-## Prereqisites
+## Prerequisites
 
 It's expected that if you have followed the first part of this tutorial, you have already installed Docker, and have created a database container, and a website container running Umbraco 9. This article will build on the code used from article 1, so if you haven't completed that first part, you should go back to [Article_1.](./Article_1.md)
 
 ## Umbraco Version
 
 
-This article uses version 9 of Umbraco, which does not currently support SQLite, but this is a feature of Umbraco 10, which will be released during Codegarden 2022. I will update this github repo to use Umbraco 10 when it is released.
+This article uses version 9 of Umbraco, which does not currently support SQLite, but this is a feature of Umbraco 10, which will be released during Codegarden 2022. I will update this Github repo to use Umbraco 10 when it is released.
 
 
 ## It's all about storage
 
 
-Containers have a problem - they can be sometimes ephemeral, and if they get deleted for any reason their file contents are gone. You don't want to think of them as analogue to a physical or a virtual server. If you were to delete a continer instance and recreate it, you  lose all data which has changed from the original continer image - it's not persisted, and that's by design. 
+Containers have a problem - they can be sometimes ephemeral, and if they get deleted for any reason their file contents are gone. You don't want to think of them as analogue to a physical or a virtual server. If you were to delete a container instance and recreate it, you  lose all data which has changed from the original container image - it's not persisted, and that's by design. 
 
 This may not be a problem when you are hosting a static website where all code and images are built into the image, but if you were hosting a database server in the container, that's less useful - any databases which were created after the container was created will be lost.
 
@@ -32,7 +32,7 @@ There are several options for managing storage in containers, and these are thro
 
 - Volumes : These are stored in the host system filesystem managed by Docker, and typically these aren't available to non-docker processes. This is the recommended way to access storage outside the container instance
 - Bind Mounts : These are basically like Volumes, but are not restricted - so they can be anywhere on the host system. This is useful if you want interaction between processes on the container as well as processes on the host system.
-- tmpfs : These are stored in the Memory of the host system, and are never written to the filesystem. THey are by that nature extremely fast, and are useful for temporary storage, but should not be used for long-term storage.
+- Tmpfs : These are stored in the Memory of the host system, and are never written to the filesystem. They are by that nature extremely fast, and are useful for temporary storage, but should not be used for long-term storage.
 
 I will focus on Volumes, as they are the most common option, and the recommended way to access storage outside the container instance, and used in the vast majority of cases.
 
@@ -46,11 +46,11 @@ Volumes can be created in several ways, but for simplicity I will focus on 2 met
 - Using the docker run -v command
 - Using docker compose files (see later in this article)
 
-In the first part of this series we ran the umbraco website container using this command
+In the first part of this series we ran the Umbraco website container using this command
 
     docker run --name umbdock -p 8000:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' --network=umbNet -d umbdock
 
-This created a volume for the umbraco logs diretory and the media folder - both would persist between restarts. 
+This created a volume for the Umbraco logs directory and the media folder - both would persist between restarts. 
 
 # Networks
 
