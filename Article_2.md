@@ -22,7 +22,7 @@ This article uses version 9 of Umbraco, which does not currently support SQLite,
 ## It's all about storage
 
 
-Containers have a problem - they can be sometimes ephemeral, and if they get deleted for any reason their file contents are gone. You don't want to think of them as analogue to a physical or a virtual server. If you were to delete a continer instance and recreate it, you  lose all data which has changed from the original continer image - it's not persisted, and that's by design. 
+Containers have a problem - they can be sometimes ephemeral, and if they get deleted for any reason their file contents are gone. You don't want to think of them as analogue to a physical or a virtual server. If you were to delete a continer instance and recreate it, you  lose all data which has changed from the original container image - it's not persisted, and that's by design. 
 
 This may not be a problem when you are hosting a static website where all code and images are built into the image, but if you were hosting a database server in the container, that's less useful - any databases which were created after the container was created will be lost.
 
@@ -60,7 +60,7 @@ In the previous part I covered a little about docker networks, and I'll add a li
 
 Before diving into networks, we need to touch on ports - when a container is created, you define which ports internally are accessable outside the container. If you don't, the container will still run, but it won't be accessible from outside the container. In the CLI, ports are exposed using the -p flag, and are defined as host:container.
 
-In our previous example we exposed port 8000 externally mapped to port 80 internally for the website containers, and port 1400 externally mapped internally to port 1433 for the database container.
+In our previous example we exposed port 8000 externally mapped to port 80 internally on the container for the website containers, and port 1400 externally mapped internally to port 1433 for the database container.
 
     docker run --name umbdock -p 8000:80 -v media:/app/wwwroot/media -v logs:/app/umbraco/Logs -e ASPNETCORE_ENVIRONMENT='Staging' --network=umbNet -d umbdock
 
@@ -132,7 +132,7 @@ This defines the containers we want to make up our application. Each service def
 
 The ability to set environmental variables is important since it allows us to also use config transformations to define a connectionstring for the "Production" environment vs the staging or local dev environment.
 
-There are 2 containers defined - the database and the website container, and each is named accordingly, and has a list of all the relevant ports, volumes and network.
+There are 3 services defined - the database and the two website containers. Each is named accordingly, and has a list of all the relevant ports, volumes and network - the two website containers are very similar - only really differing in that they expose different ports. If you looks at both the ports section of the two websites they have different external ports - umbdock exposes port 5080 and umbdock exposes port 5081.
 
 #### Volumes
 
@@ -167,6 +167,9 @@ You'll be able to access your website at http://localhost:5080
 That's it - all done!
 
 Hopefully you've enjoyed this experience, and have learned a little about how Docker, and docker compose can be used to host and test applications
+
+## Wrapping up
+
 
 
 ## Troubleshooting
