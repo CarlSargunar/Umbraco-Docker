@@ -170,8 +170,9 @@ That's it - all done!
 
 Hopefully you've enjoyed this experience, and have learned a little about how Docker, and docker compose can be used to host and test applications
 
-## Wrapping up
+# Companion video
 
+[![Video Walkthrough Part 2](https://img.youtube.com/vi/a9FoZTaSWm0/0.jpg)](https://youtu.be/a9FoZTaSWm0)
 
 
 ## Troubleshooting
