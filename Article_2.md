@@ -58,7 +58,7 @@ In the previous part I covered a little about docker networks, and I'll add a li
 
 ## Ports
 
-Before diving into networks, we need to touch on ports - when a container is created, you define which ports internally are accessable outside the container. If you don't, the container will still run, but it won't be accessible from outside the container. In the CLI, ports are exposed using the -p flag, and are defined as host:container.
+Before diving into networks, we need to touch on ports - when a container is created, you define which ports internally are accessible  outside the container. If you don't, the container will still run, but it won't be accessible from outside the container. In the CLI, ports are exposed using the -p flag, and are defined as host:container.
 
 In our previous example we exposed port 8000 externally mapped to port 80 internally for the website containers, and port 1400 externally mapped internally to port 1433 for the database container.
 
@@ -69,23 +69,23 @@ In our previous example we exposed port 8000 externally mapped to port 80 intern
 ## Bridge Network 
 
 
-The default network in docker is "bridge" networking, which is automatically assigned to containers unless specified. All containers in this network appear on the host IP address, but that also means that if you have multiple website containers, you can't use the same extenal port for all of them - you will need to map a different port per container. 
+The default network in docker is "bridge" networking, which is automatically assigned to containers unless specified. All containers in this network appear on the host IP address, but that also means that if you have multiple website containers, you can't use the same external port for all of them - you will need to map a different port per container. 
 
 ### Default Bridge Network
 
-The standard bridge network also doesn't let the containers communicate with each other usnig DNS, only by their internal IP address, and that's not something that's available to you at design time, only run time. If you wanted to keep using the bridge network, you will need to query the contianer IP address at runtime and use that to address it. Every container can see every other container in this network, but that ususally isn't a problem. The IP address assigned will also change on all container restarts, so you can't rely on it being the same every time.
+The standard bridge network also doesn't let the containers communicate with each other using DNS, only by their internal IP address, and that's not something that's available to you at design time, only run time. If you wanted to keep using the bridge network, you will need to query the container  IP address at runtime and use that to address it. Every container can see every other container in this network, but that usually isn't a problem. The IP address assigned will also change on all container restarts, so you can't rely on it being the same every time.
 
 ### User Defined Bridge Network
 
 
-The main difference with this sort is that you can specify a name for this network, but also that containers can access each other using their container name. This is great when you are creating a connectionstring for a website to access a database for example - so even though the IP address isn't going to be static, it doesn't matter. You access the container you need by it's name. 
+The main difference with this sort is that you can specify a name for this network, but also that containers can access each other using their container name. This is great when you are creating a connectionstring for a website to access a database for example - so even though the IP address isn't going to be static, it doesn't matter. You access the container you need by its name. 
 
 These are also called Custom bridge networks, and the other thing docker does is isolate all custom bridge networks from all others. Any container outside the network won't be able to see containers in the network, they will be isolated.
 
 ## Host Networks
 
 
-Host networking is used when you have a container which basically needs to communicate as if it's running natively on the host computer - it will be able to access the hosts network. That's evident when you create the container - you don't need to spricfy any port mappings. Ports on the container are natively mapped to the host computer network
+Host networking is used when you have a container which basically needs to communicate as if it's running natively on the host computer - it will be able to access the hosts network. That's evident when you create the container - you don't need to specify any port mappings. Ports on the container are natively mapped to the host computer network
 
 There are other networking types available, but those are less common, and are more advanced, so I'm not going to cover them here - if you want to find out more there are reference links in the footer. 
 
@@ -98,20 +98,20 @@ Now that I have covered networking, and storage the last part, and possibly the 
 ### Dockerfile
 
 
-In the previous article we created 2 docker containers, each with their own Dockerfiles. These Dockerfiles have one purpose - to define the image that the container will use. It starts with defining what the base image will be, and then it defines the commands that will be run when the container is started. The advice I've always been given is to use many small steps in the Dockerfile, and to use a consistant image for containers. The aim is always to keep the container image size as small as possible to keep resource use down and set you up for scalability from day 1.
+In the previous article we created 2 docker containers, each with their own Dockerfiles. These Dockerfiles have one purpose - to define the image that the container will use. It starts with defining what the base image will be, and then it defines the commands that will be run when the container is started. The advice I've always been given is to use many small steps in the Dockerfile, and to use a consistent image for containers. The aim is always to keep the container image size as small as possible to keep resource use down and set you up for scalability from day 1.
 
-Additional to defining the starting container size you can really do everything you can in the commandline in a Docker File including and not restricted to
+Additional to defining the starting container size you can really do everything you can in the command-line in a Docker File including and not restricted to
 
 - Run commands, which in turn can do basically anything you want including
-    - Downloading dependancies and installing packages
+    - Downloading dependencies and installing packages
     - Compiling code
     - Running tests
     - Attaching databases, starting indexes
     - Copying/deleting files, images, directories
     - Anything you can do on the command line
 - Defining environmental variables
-- Expose ports from the contaienr to the outside world
-- Defining the startup command for the container, the process which will run when the container is started. 
+- Expose ports from the container to the outside world
+- Defining the start-up command for the container, the process which will run when the container is started. 
 
 With a docker file we can create a docker image, which can be saved locally, or pushed to a private or public repository, and re-used by other applications. 
 
@@ -144,7 +144,7 @@ As with volumes, each service uses a specific network, and these networks need t
 
 ## Starting things up
 
-When you're ready to start up the application therea are 2 steps we need to take. 
+When you're ready to start up the application there are 2 steps we need to take. 
 
 First copy the docker-compose.yml file has been copied to the root of the application. 
 
@@ -158,7 +158,7 @@ Once that's done, run the following command it will start things up.
 
 That's the extent of the user interaction in this part. That's it - this will start your entire application in disconnected mode, which means it'll continue to run after you close the terminal.
 
-If you look at Docker desktop, you should see your application listed, but it will appear differntly to how it might have previously, since it is now being created through docker compose, so all the containers are grouped together.
+If you look at Docker desktop, you should see your application listed, but it will appear differently to how it might have previously, since it is now being created through docker compose, so all the containers are grouped together.
 
 ![Docker Application](/media/docker-compose.png)
 
