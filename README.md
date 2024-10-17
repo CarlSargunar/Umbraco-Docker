@@ -1,5 +1,7 @@
 # Umbraco and Docker
 
+**While this is still largely accurate, there is a more recent and up-to-date repository which is a docker workshop which will give you a good idea of using Umbraco with Docker - see [https://github.com/CarlSargunar/Umbraco-Docker-Workshop](https://github.com/CarlSargunar/Umbraco-Docker-Workshop)**
+
 This repository is a guide for how to run Umbraco in Docker containers.
 
 ## Prerequisites to run this sample:
